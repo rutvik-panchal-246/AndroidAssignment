@@ -76,8 +76,8 @@ class TimerActivity : ComponentActivity() {
     companion object {
 
         // Timer duration is an milliseconds
-        const val TIMER_DURATION: Long = 10000
-        const val COUNTDOWN_INTERVAL: Long = 20
+        const val TIMER_DURATION: Long = 60_000
+        const val COUNTDOWN_INTERVAL: Long = 50
     }
 }
 
