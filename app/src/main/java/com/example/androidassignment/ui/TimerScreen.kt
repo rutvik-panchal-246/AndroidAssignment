@@ -38,7 +38,7 @@ import com.example.androidassignment.utils.ComposableSideEffects
 fun TimerScreen(
     timerStates: TimerState,
     isTicking: Boolean,
-    startPauseAction: () -> Unit,
+    startPauseAction: (Boolean) -> Unit,
     stopAction: () -> Unit
 ) {
 
@@ -92,7 +92,7 @@ fun TimerScreen(
 fun TimerActions(
     modifier: Modifier = Modifier,
     isTicking: Boolean,
-    startPauseAction: () -> Unit,
+    startPauseAction: (Boolean) -> Unit,
     stopAction: () -> Unit
 ) {
     Row(
@@ -100,7 +100,7 @@ fun TimerActions(
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         FloatingActionButton(
-            onClick = { startPauseAction() },
+            onClick = { startPauseAction(isTicking) },
         ) {
             Text(
                 text = if (isTicking.not()) stringResource(id = R.string.btn_timer_start) else stringResource(

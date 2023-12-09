@@ -11,7 +11,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlin.math.round
 
 class TimerViewModel : ViewModel() {
@@ -48,51 +47,53 @@ class TimerViewModel : ViewModel() {
         _isTicking.value = false
     }
 
-    private lateinit var countDownJob: Job
+    private var countDownJob: Job? = null
 
     private suspend fun countDownTimer(
         duration: Long,
         interval: Long = TimerActivity.COUNTDOWN_INTERVAL,
-        block: suspend (Long, Long, Long, Long, Float) -> Unit
+        block: (Long, Long, Long, Long, Float) -> Unit
     ) {
+        if(countDownJob?.isActive == true) return
         var remainingTime = duration
-        withContext(Dispatchers.IO) {
-            countDownJob = launch {
-                while (remainingTime > 0) {
-                    val minutes = remainingTime / 60_000L
-                    val seconds = (remainingTime / 1_000L) % 60
-                    val milliseconds = remainingTime % 1_000L
-                    val progress =
-                        100 - (remainingTime.toFloat() / TimerActivity.TIMER_DURATION) * 100
+        countDownJob = viewModelScope.launch(Dispatchers.IO) {
+            while (remainingTime > 0) {
+                val minutes = remainingTime / 60_000L
+                val seconds = (remainingTime / 1_000L) % 60
+                val milliseconds = remainingTime % 1_000L
+                val progress =
+                    100 - (remainingTime.toFloat() / TimerActivity.TIMER_DURATION) * 100
 
-                    delay(interval)
-                    remainingTime -= interval
+                delay(interval)
+                remainingTime -= interval
 
-                    block(minutes, seconds, milliseconds, remainingTime, round(progress))
-                }
+                block(minutes, seconds, milliseconds, remainingTime, round(progress))
             }
-
-            countDownJob.start()
         }
     }
 
     private fun updateTimerState(isTicking: Boolean) {
-        viewModelScope.launch {
-            if (isTicking) {
+        if (isTicking) {
+            viewModelScope.launch {
                 countDownTimer(
                     _timerLeft,
                     block = { minute, seconds, milliseconds, remainingTime, progress ->
                         _timerLeft = remainingTime
                         if (seconds == 0L && milliseconds <= TimerActivity.COUNTDOWN_INTERVAL) {
-                            _timerState.value = TimerState("01:00:00", 0f, state = TimerStates.COMPLETED)
+                            _timerState.value =
+                                TimerState("01:00:00", 0f, state = TimerStates.COMPLETED)
                             resetTimer()
                         } else {
-                            _timerState.value = TimerState("${minute.formatToTwoDigit()}:${seconds.formatToTwoDigit()}:${milliseconds.formatToTwoDigit()}", progress, state = TimerStates.TICKING)
+                            _timerState.value = TimerState(
+                                "${minute.formatToTwoDigit()}:${seconds.formatToTwoDigit()}:${milliseconds.formatToTwoDigit()}",
+                                progress,
+                                state = TimerStates.TICKING
+                            )
                         }
                     })
-            } else {
-                countDownJob.cancel()
             }
+        } else {
+            countDownJob?.cancel()
         }
     }
 

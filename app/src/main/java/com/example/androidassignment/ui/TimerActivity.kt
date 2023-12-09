@@ -49,7 +49,7 @@ class TimerActivity : ComponentActivity() {
                     timerStates = timerState.value,
                     isTicking = isTicking.value,
                     startPauseAction = {
-                        if (isTicking.value) {
+                        if (it) {
                             viewModel.pauseTimer()
                         } else {
                             viewModel.startTimer()
