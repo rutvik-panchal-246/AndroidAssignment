@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Android Assignment</string>
+
+    <!-- Timer Activity -->
+    <string name="lbl_initial_idle_timer">00:60:00</string>
+    <string name="lbl_timer_counter">Countdown Timer</string>
+    <string name="btn_timer_stop">Stop</string>
+    <string name="btn_timer_start">Start</string>
+    <string name="btn_timer_pause">Pause</string>
+
+    <!-- Notifications -->
+    <string name="lbl_notification_title">Timer finished!</string>
+    <string name="lbl_notification_description">Your timer for 1 min has finished.</string>
+
+    <string name="lbl_channel_name">Notification</string>
+    <string name="lbl_channel_description">Control your notifications</string>
+
+</resources>
