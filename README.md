@@ -1,5 +1,9 @@
 # AndroidAssignment
 
+## Application Use case
+
+Simple one minute count down application which provides two button start/pause and stop, User can start count down timer and pause it and stop it, User see system notification when timer is going to finish.
+
 ## Code structure
 
 1. di : contain viewmodel module which inject viewmodel dependency in our application
