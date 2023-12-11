@@ -2,7 +2,7 @@
 
 ## Application Use case
 
-Simple one minute count down application which provides two button start/pause and stop, User can start count down timer and pause it and stop it, User see system notification when timer is going to finish.
+Simple one minute count down application which provides two button start/pause and stop, User can start count down timer and pause it and stop it, Count down timer is run even though app is in background or in foreground, System sends notification to the user while application is in background and timer is about going to finish.
 
 ## Code structure
 
