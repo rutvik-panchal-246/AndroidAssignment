@@ -1,6 +1,6 @@
 # AndroidAssignment
 
-##Code structure
+## Code structure
 
 1. di : contain viewmodel module which inject viewmodel dependency in our application
 2. models : contains model for the current timer state
