@@ -58,16 +58,25 @@ class TimerViewModel : ViewModel() {
         var remainingTime = duration
         countDownJob = viewModelScope.launch(Dispatchers.IO) {
             while (remainingTime > 0) {
+                val startTime = System.currentTimeMillis()
                 val minutes = remainingTime / 60_000L
                 val seconds = (remainingTime / 1_000L) % 60
                 val milliseconds = remainingTime % 1_000L
                 val progress =
                     100 - (remainingTime.toFloat() / TimerActivity.TIMER_DURATION) * 100
 
-                delay(interval)
+                withContext(Dispatchers.Main){
+                    block(minutes, seconds, milliseconds, remainingTime, round(progress))
+                }
+
                 remainingTime -= interval
 
-                block(minutes, seconds, milliseconds, remainingTime, round(progress))
+                // Checking with system time, The delay function in coroutines is not guaranteed to be precise
+                val endTime = System.currentTimeMillis()
+                val elapsedTime = endTime - startTime
+                if (elapsedTime < interval) {
+                    delay(interval - elapsedTime)
+                }
             }
         }
     }
